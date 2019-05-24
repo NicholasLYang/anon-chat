@@ -21,12 +21,11 @@ export function resourceToMessage(resource: MessageResource): Message {
 }
 
 export function resourceToConversation(
-  resource: ConversationResource,
-  messages: Message[]
+  resource: ConversationResource
 ): Conversation {
   return {
     ...resource.attributes,
     id: resource.id,
-    messages
+    messages: []
   };
 }

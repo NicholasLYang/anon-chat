@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Conversation, Message } from "../types";
 
 interface Props {
@@ -16,7 +16,13 @@ const MessagesArea: React.FunctionComponent<Props> = ({ conversation }) => {
       <h2>{title}</h2>
       <ul>
         {sortedMessages.map(message => {
-          return <li key={message.id}>{message.text}</li>;
+          return (
+            <li
+              key={message.id}
+            >
+              {message.text}
+            </li>
+          );
         })}
       </ul>
     </div>

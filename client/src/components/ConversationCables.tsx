@@ -5,7 +5,7 @@ import { MessageResource } from "../lib/jsonApi";
 import { ActionCableConsumer } from "react-actioncable-provider";
 
 interface Props {
-  conversations: Conversation[];
+  conversations: { [s: string]: Conversation };
   handleReceivedMessage: (resource: Request<MessageResource>) => void;
 }
 const ConversationCables: React.FunctionComponent<Props> = ({
@@ -14,7 +14,7 @@ const ConversationCables: React.FunctionComponent<Props> = ({
 }) => {
   return (
     <Fragment>
-      {conversations.map(conversation => (
+      {Object.values(conversations).map((conversation: Conversation) => (
         <ActionCableConsumer
           key={conversation.id}
           channel={{

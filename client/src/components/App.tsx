@@ -5,6 +5,9 @@ import ConversationsList from "./ConversationsList";
 const styles = {
   App: {
     display: "flex",
+    fontFamily: "proxima-nova, sans-serif",
+    fontWeight: "400",
+    fontStyle: "normal",
     flexDirection: "column"
   },
   header: {

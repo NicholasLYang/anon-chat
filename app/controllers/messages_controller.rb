@@ -1,7 +1,8 @@
 class MessagesController < ApplicationController
 
   def index
-    render json: MessageSerializer.new(Message.all)
+    messages = Message.order(created_at: :desc).page(params[:page] || 1)
+    render json: MessageSerializer.new(messages)
   end
   
   def create

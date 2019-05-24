@@ -14,26 +14,30 @@ import ConversationCables from "./ConversationCables";
 
 interface Props {}
 interface State {
-  conversations: Conversation[];
+  conversations: { [s: string]: Conversation };
   error?: string;
   activeConversation?: string;
 }
 
 class ConversationsList extends React.Component<Props, State> {
-  state = {
-    conversations: [],
-    error: undefined,
-    activeConversation: undefined
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      conversations: {},
+      error: undefined,
+      activeConversation: undefined
+    };
+  }
 
   componentDidMount() {
     fetch(`${API_ROOT}/conversations`)
       .then(res => res.json())
       .then(res => {
         if (res.data) {
-          const conversations = res.data.map((resource: ConversationResource) =>
-            resourceToConversation(resource, [])
-          );
+          const conversations: { [s: string]: Conversation } = {};
+          res.data.forEach((resource: ConversationResource) => {
+            conversations[resource.id] = resourceToConversation(resource);
+          });
           this.setState({ conversations });
         } else {
           this.setState({
@@ -45,21 +49,19 @@ class ConversationsList extends React.Component<Props, State> {
 
   handleReceivedConversation = (request: Request<ConversationResource>) => {
     const resource = request.data;
-    const conversation = resourceToConversation(resource, []);
+    const { conversations } = this.state;
+    const conversation = resourceToConversation(resource);
+    conversations[conversation.id] = conversation;
     this.setState({
-      conversations: [...this.state.conversations, conversation]
+      conversations
     });
   };
 
   handleReceivedMessage = (request: Request<MessageResource>) => {
     const resource = request.data;
     const message = resourceToMessage(resource);
-    const conversations: Array<Conversation> = [...this.state.conversations];
-    console.log(message);
-    console.log(conversations);
-    const conversation = conversations.find(
-      conversation => conversation.id === message.conversationId
-    );
+    const { conversations } = this.state;
+    const conversation = conversations[message.conversationId];
     if (conversation) {
       conversation.messages = [...conversation.messages, message];
       this.setState({ conversations });
@@ -69,7 +71,25 @@ class ConversationsList extends React.Component<Props, State> {
   };
 
   handleClick = (id: string) => () => {
-    this.setState({ activeConversation: id });
+    fetch(`${API_ROOT}/messages`)
+      .then(res => res.json())
+      .then(res => {
+        if (res.data) {
+          const messages = res.data.map((resource: MessageResource) =>
+            resourceToMessage(resource)
+          );
+
+          const { conversations } = this.state;
+          const convo = conversations[id];
+          convo.messages = messages;
+          this.setState({ conversations });
+        } else {
+          throw Error("Could not fetch messages for conversation!");
+        }
+      })
+      .then(() => {
+        this.setState({ activeConversation: id });
+      });
   };
 
   render() {
@@ -81,14 +101,14 @@ class ConversationsList extends React.Component<Props, State> {
           onReceived={this.handleReceivedConversation}
         />
         <h2>Conversations</h2>
-        {this.state.conversations.length > 0 && (
+        {Object.keys(conversations).length > 0 && (
           <ConversationCables
             conversations={conversations}
             handleReceivedMessage={this.handleReceivedMessage}
           />
         )}
         <ul>
-          {conversations.map((convo: Conversation) => (
+          {Object.values(conversations).map((convo: Conversation) => (
             <li key={convo.id}>
               <button onClick={this.handleClick(convo.id)}>
                 {convo.title}
@@ -99,11 +119,7 @@ class ConversationsList extends React.Component<Props, State> {
         {/*<NewConversationForm />
          */}
         {activeConversation && (
-          <MessagesArea
-            conversation={conversations.find(
-              (convo: Conversation) => convo.id === activeConversation
-            )}
-          />
+          <MessagesArea conversation={conversations[activeConversation]} />
         )}
       </div>
     );
