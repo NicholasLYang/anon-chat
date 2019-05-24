@@ -9,6 +9,7 @@
     "@types/react": "^16.8.18",
     "@types/react-dom": "16.8.4",
     "actioncable": "latest",
+    "formik": "^1.5.7",
     "prettier": "^1.17.1",
     "react": "^16.8.6",
     "react-actioncable-provider": "^2.0.0",

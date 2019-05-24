@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { Conversation, Message } from "../types";
+import NewMessageForm from "./NewMessageForm";
 
 interface Props {
   conversation: Conversation | undefined;
 }
 
-const MessagesArea: React.FunctionComponent<Props> = ({ conversation }) => {
+const ConversationArea: React.FunctionComponent<Props> = ({ conversation }) => {
   if (!conversation) {
     return null;
   }
   const { title, messages } = conversation;
   const sortedMessages = sortMessages(messages);
   return (
-    <div className="messagesArea">
+    <div>
       <h2>{title}</h2>
       <ul>
         {sortedMessages.map(message => {
@@ -25,6 +26,7 @@ const MessagesArea: React.FunctionComponent<Props> = ({ conversation }) => {
           );
         })}
       </ul>
+      <NewMessageForm conversationId={conversation.id} />
     </div>
   );
 };
@@ -35,4 +37,4 @@ const sortMessages = (messages: Message[]) => {
   );
 };
 
-export default MessagesArea;
+export default ConversationArea;

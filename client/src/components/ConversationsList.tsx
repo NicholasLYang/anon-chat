@@ -2,7 +2,7 @@ import React from "react";
 //@ts-ignore
 import { ActionCableConsumer } from "react-actioncable-provider";
 import { API_ROOT } from "../constants";
-import MessagesArea from "./MessagesArea";
+import ConversationArea from "./ConversationArea";
 import {
   ConversationResource,
   resourceToConversation,
@@ -119,7 +119,7 @@ class ConversationsList extends React.Component<Props, State> {
         {/*<NewConversationForm />
          */}
         {activeConversation && (
-          <MessagesArea conversation={conversations[activeConversation]} />
+          <ConversationArea conversation={conversations[activeConversation]} />
         )}
       </div>
     );
