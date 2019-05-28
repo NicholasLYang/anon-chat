@@ -1,6 +1,6 @@
 import React from "react";
 import withStyles, { WithStyles } from "react-jss";
-import ConversationsList from "./ConversationsList";
+import ChatBox from "./ChatBox";
 
 const styles = {
   App: {
@@ -24,7 +24,7 @@ const App: React.FC<Props> = ({ classes }) => {
       <header className={classes.header}>
         <h1> Anon Chat </h1>
       </header>
-      <ConversationsList />
+      <ChatBox />
     </div>
   );
 };

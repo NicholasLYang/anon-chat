@@ -3,7 +3,12 @@ import { Conversation, Message } from "../types";
 
 export interface MessageResource extends ResourceObject {
   type: "message";
-  attributes: { text: string; conversationId: string; createdAt: string };
+  attributes: {
+    text: string;
+    conversationId: string;
+    createdAt: string;
+    userIndex: number;
+  };
 }
 
 export interface ConversationResource extends ResourceObject {

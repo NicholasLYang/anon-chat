@@ -1,12 +1,17 @@
 class MessagesController < ApplicationController
 
   def index
-    messages = Message.order(created_at: :desc).page(params[:page] || 1)
+    messages = Message
+                 .where(conversation_id: params[:convo_id])
+                 .order(created_at: :desc)
+                 .page(params[:page] || 1)
     render json: MessageSerializer.new(messages)
   end
   
   def create
-    @message = Message.create!(message_params)
+    @message = Message.create!(
+      message_params.merge(conversation_id: params[:convo_id])
+    )
     conversation = Conversation.find(@message.conversation_id)
     serializer = MessageSerializer.new(@message)
     serialized_data = serializer.serializable_hash
@@ -18,6 +23,6 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:text, :conversation_id, :user_id)
+    params.require(:message).permit(:text, :user_index)
   end
 end

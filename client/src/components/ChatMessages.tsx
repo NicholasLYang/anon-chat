@@ -4,9 +4,14 @@ import NewMessageForm from "./NewMessageForm";
 
 interface Props {
   conversation: Conversation | undefined;
+  userIndex?: number;
+  uuid: string;
 }
 
-const ConversationArea: React.FunctionComponent<Props> = ({ conversation }) => {
+const ChatMessages: React.FunctionComponent<Props> = ({
+  conversation,
+  userIndex
+}) => {
   if (!conversation) {
     return null;
   }
@@ -19,6 +24,11 @@ const ConversationArea: React.FunctionComponent<Props> = ({ conversation }) => {
         {sortedMessages.map(message => {
           return (
             <li
+              style={
+                userIndex === message.userIndex
+                  ? { backgroundColor: "blue" }
+                  : { backgroundColor: "white" }
+              }
               key={message.id}
             >
               {message.text}
@@ -26,7 +36,7 @@ const ConversationArea: React.FunctionComponent<Props> = ({ conversation }) => {
           );
         })}
       </ul>
-      <NewMessageForm conversationId={conversation.id} />
+      {userIndex && <NewMessageForm userIndex={userIndex} conversationId={conversation.id} />}
     </div>
   );
 };
@@ -37,4 +47,4 @@ const sortMessages = (messages: Message[]) => {
   );
 };
 
-export default ConversationArea;
+export default ChatMessages;

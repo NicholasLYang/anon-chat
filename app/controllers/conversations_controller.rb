@@ -2,19 +2,15 @@ class ConversationsController < ApplicationController
   def index
     render json: ConversationSerializer.new(Conversation.all)
   end
-  
-  def create
-    @conversation = Conversation.new(conversation_params)
-    if @conversation.save
-      serializer = ConversationSerializer.new(@conversation)
-      ActionCable.server.broadcast('conversations_channel', serializer.serializable_hash)
-      render json: serializer
-    end
-  end
-  
-  private
-  
-  def conversation_params
-    params.require(:conversation).permit(:title)
+
+  ## If there is a conversation available, joins the chat. Otherwise
+  ## creates one
+  def create_or_join
+    raise ActionController::ParameterMissing.new("uuid") if
+      params[:uuid].nil?
+    res = Conversation.create_or_join(uuid: params[:uuid])
+
+    serializer = ConversationSerializer.new(res[:conversation])
+    render json: serializer.serializable_hash.merge(user_index: res[:user_index])
   end
 end

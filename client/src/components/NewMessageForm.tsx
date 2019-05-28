@@ -8,9 +8,10 @@ interface FormValues {
 
 interface Props {
   conversationId: string;
+  userIndex: number;
 }
 
-const NewMessageForm: React.FunctionComponent<Props> = ({ conversationId }) => {
+const NewMessageForm: React.FunctionComponent<Props> = ({ conversationId, userIndex }) => {
   return (
     <Formik
       initialValues={{ text: "" }}
@@ -19,13 +20,12 @@ const NewMessageForm: React.FunctionComponent<Props> = ({ conversationId }) => {
         { setSubmitting, resetForm }: FormikActions<FormValues>
       ) => {
         if (values.text !== "") {
-          fetch(`${API_ROOT}/messages`, {
+          fetch(`${API_ROOT}/conversations/${conversationId}/messages`, {
             method: "POST",
             headers: HEADERS,
             body: JSON.stringify({
               ...values,
-              conversation_id: conversationId,
-              user_id: 1
+              user_index: userIndex
             })
           }).then(() => {
             resetForm();
