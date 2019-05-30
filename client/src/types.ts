@@ -13,6 +13,6 @@ export interface Conversation {
 }
 
 // Standard Rails format
-export interface RailsRequest<T> {
+export interface Request<T> {
   data: T;
 }
