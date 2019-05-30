@@ -5,7 +5,7 @@ class Conversation < ApplicationRecord
   def self.create_or_join(uuid:)
     # If there already exists a membership for the uuid, just return
     # that conversation
-    membership = Membership.find_by(uuid: uuid)
+    membership = Membership.where(is_active: true).find_by(uuid: uuid)
     return {
       conversation: membership.conversation,
       user_index: membership.index
@@ -20,8 +20,6 @@ class Conversation < ApplicationRecord
     
     if @conversation.nil?
       @conversation = Conversation.create!(is_available: true)
-      puts "CONVO"
-      puts @conversation
       user_index = 1
     else
       user_index = 2
