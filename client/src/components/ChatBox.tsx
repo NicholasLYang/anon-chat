@@ -7,9 +7,10 @@ import {
   MessageResource,
   resourceToMessage
 } from "../lib/jsonApi";
-import { Request, Conversation } from "../types";
+import { RailsRequest, Conversation } from "../types";
 import uuidv1 from "uuid/v1";
 import ChatMessages from "./ChatMessages";
+import NewMessageForm from "./NewMessageForm";
 
 interface Props {}
 
@@ -36,7 +37,7 @@ class ChatBox extends React.Component<Props, State> {
     };
   }
 
-  handleReceivedMessage = (request: Request<MessageResource>) => {
+  handleReceivedMessage = (request: RailsRequest<MessageResource>) => {
     const resource = request.data;
     const message = resourceToMessage(resource);
     const { activeConversation } = this.state;
@@ -48,16 +49,9 @@ class ChatBox extends React.Component<Props, State> {
     }
   };
 
-  connectToConvo = () => {
-    fetch(`${API_ROOT}/conversations`, {
-      method: "POST",
-      headers: HEADERS,
-      body: JSON.stringify({ uuid: this.state.uuid })
-    })
-      .then(res => res.json())
+  handleNewConversation = (convoPromise: Promise<Response>) => {
+    convoPromise.then(res => res.json())
       .then(res => {
-        console.log("RES");
-        console.log(res);
         if (!res.data) {
           throw Error("No conversation!");
         }
@@ -83,11 +77,29 @@ class ChatBox extends React.Component<Props, State> {
           this.setState({ activeConversation });
         }
       });
+  }
+
+  componentDidMount() {
+    const req = fetch(`${API_ROOT}/conversations`, {
+      method: "POST",
+      headers: HEADERS,
+      body: JSON.stringify({ conversation: { uuid: this.state.uuid } })
+    });
+    this.handleNewConversation(req);
   };
+
+  getNextConversation = () => {
+    const req = fetch(`${API_ROOT}/conversations`, {
+      method: "DELETE",
+      headers: HEADERS,
+      body: JSON.stringify({ conversation: { uuid: this.state.uuid } })
+    });
+    this.handleNewConversation(req);
+  }
 
   render() {
     const { activeConversation, uuid, userIndex } = this.state;
-    if (activeConversation) {
+    if (activeConversation && userIndex && uuid) {
       return (
         <div>
           <ActionCableConsumer
@@ -102,12 +114,14 @@ class ChatBox extends React.Component<Props, State> {
             conversation={activeConversation}
             userIndex={userIndex}
           />
+          <NewMessageForm userIndex={userIndex} conversationId={activeConversation.id}/>
+          <button onClick={this.getNextConversation}> Next </button>
         </div>
       );
     }
     return (
       <div>
-        <button onClick={this.connectToConvo}> Connect </button>
+        Connecting...
       </div>
     );
   }

@@ -41,7 +41,6 @@ const NewMessageForm: React.FunctionComponent<Props> = ({ conversationId, userIn
         handleChange,
         handleBlur,
         handleSubmit,
-        isSubmitting
       }: FormikProps<FormValues>) => (
         <form onSubmit={handleSubmit}>
           <input
@@ -52,9 +51,6 @@ const NewMessageForm: React.FunctionComponent<Props> = ({ conversationId, userIn
             value={values.text}
           />
           {errors.text && touched.text && errors.text}
-          <button type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
         </form>
       )}
     </Formik>

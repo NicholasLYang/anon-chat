@@ -18,10 +18,6 @@
     "isolatedModules": true,
     "importHelpers": true,
     "noEmit": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/js/@types"
-    ],
     "jsx": "preserve"
   },
   "include": [
