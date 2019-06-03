@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ChatMessage: React.FunctionComponent<Props> = ({ id, text }) => {
-  return <div>{this.prop.text}</div>;
+  return <div>{text}</div>;
 };
 
 export default ChatMessage;
