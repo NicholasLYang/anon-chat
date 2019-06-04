@@ -53,7 +53,6 @@ class ChatBox extends React.Component<Props, State> {
     convoPromise
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         if (!res.data) {
           throw Error("No conversation!");
         }
