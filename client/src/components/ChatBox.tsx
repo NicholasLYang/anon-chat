@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 //@ts-ignore
-import { ActionCableConsumer } from 'react-actioncable-provider';
-import { API_ROOT, HEADERS } from '../constants';
+import { ActionCableConsumer } from "react-actioncable-provider";
+import { API_ROOT, HEADERS } from "../constants";
 import {
   resourceToConversation,
   MessageResource,
   resourceToMessage
-} from '../lib/jsonApi';
-import { RailsRequest, Conversation } from '../types';
-import uuidv1 from 'uuid/v1';
-import ChatMessages from './ChatMessages';
-import NewMessageForm from './NewMessageForm';
+} from "../lib/jsonApi";
+import { RailsRequest, Conversation } from "../types";
+import uuidv1 from "uuid/v1";
+import ChatMessages from "./ChatMessages";
+import NewMessageForm from "./NewMessageForm";
 
 interface Props {}
 
@@ -24,10 +24,10 @@ interface State {
 class ChatBox extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    let uuid = localStorage.getItem('uuid');
+    let uuid = localStorage.getItem("uuid");
     if (!uuid) {
       uuid = uuidv1();
-      localStorage.setItem('uuid', uuid);
+      localStorage.setItem("uuid", uuid);
     }
     this.state = {
       error: undefined,
@@ -45,7 +45,7 @@ class ChatBox extends React.Component<Props, State> {
       activeConversation.messages = [...activeConversation.messages, message];
       this.setState({ activeConversation });
     } else {
-      throw Error('Conversation does not exist');
+      throw Error("Conversation does not exist");
     }
   };
 
@@ -55,7 +55,7 @@ class ChatBox extends React.Component<Props, State> {
       .then(res => {
         console.log(res);
         if (!res.data) {
-          throw Error('No conversation!');
+          throw Error("No conversation!");
         }
         const activeConversation = resourceToConversation(res.data);
         const userIndex = res.user_index;
@@ -67,7 +67,7 @@ class ChatBox extends React.Component<Props, State> {
       .then(res => res.json())
       .then(res => {
         if (!res.data) {
-          throw Error('Could not fetch messages for conversation!');
+          throw Error("Could not fetch messages for conversation!");
         }
         const messages = res.data.map((resource: MessageResource) =>
           resourceToMessage(resource)
@@ -83,7 +83,7 @@ class ChatBox extends React.Component<Props, State> {
 
   componentDidMount() {
     const req = fetch(`${API_ROOT}/conversations`, {
-      method: 'POST',
+      method: "POST",
       headers: HEADERS,
       body: JSON.stringify({ conversation: { uuid: this.state.uuid } })
     });
@@ -92,7 +92,7 @@ class ChatBox extends React.Component<Props, State> {
 
   getNextConversation = () => {
     const req = fetch(`${API_ROOT}/conversations`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: HEADERS,
       body: JSON.stringify({ conversation: { uuid: this.state.uuid } })
     });
@@ -106,7 +106,7 @@ class ChatBox extends React.Component<Props, State> {
         <div>
           <ActionCableConsumer
             channel={{
-              channel: 'MessagesChannel',
+              channel: "MessagesChannel",
               conversation: activeConversation.id
             }}
             onReceived={this.handleReceivedMessage}
