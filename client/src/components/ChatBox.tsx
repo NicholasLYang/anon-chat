@@ -50,7 +50,8 @@ class ChatBox extends React.Component<Props, State> {
   };
 
   handleNewConversation = (convoPromise: Promise<Response>) => {
-    convoPromise.then(res => res.json())
+    convoPromise
+      .then(res => res.json())
       .then(res => {
         if (!res.data) {
           throw Error("No conversation!");
@@ -77,7 +78,7 @@ class ChatBox extends React.Component<Props, State> {
           this.setState({ activeConversation });
         }
       });
-  }
+  };
 
   componentDidMount() {
     const req = fetch(`${API_ROOT}/conversations`, {
@@ -86,7 +87,7 @@ class ChatBox extends React.Component<Props, State> {
       body: JSON.stringify({ conversation: { uuid: this.state.uuid } })
     });
     this.handleNewConversation(req);
-  };
+  }
 
   getNextConversation = () => {
     const req = fetch(`${API_ROOT}/conversations`, {
@@ -95,7 +96,7 @@ class ChatBox extends React.Component<Props, State> {
       body: JSON.stringify({ conversation: { uuid: this.state.uuid } })
     });
     this.handleNewConversation(req);
-  }
+  };
 
   render() {
     const { activeConversation, uuid, userIndex } = this.state;
@@ -114,16 +115,15 @@ class ChatBox extends React.Component<Props, State> {
             conversation={activeConversation}
             userIndex={userIndex}
           />
-          <NewMessageForm userIndex={userIndex} conversationId={activeConversation.id}/>
+          <NewMessageForm
+            userIndex={userIndex}
+            conversationId={activeConversation.id}
+          />
           <button onClick={this.getNextConversation}> Next </button>
         </div>
       );
     }
-    return (
-      <div>
-        Connecting...
-      </div>
-    );
+    return <div>Connecting...</div>;
   }
 }
 
