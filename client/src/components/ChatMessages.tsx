@@ -1,5 +1,6 @@
-import React, { CSSProperties } from "react";
-import { Conversation, Message } from "../types";
+import React, { CSSProperties } from 'react';
+import { Conversation, Message } from '../types';
+import ChatMessage from './ChatMessage';
 
 interface Props {
   conversation: Conversation;
@@ -12,12 +13,12 @@ const getMessageStyle = (
   userIndex: number
 ): CSSProperties => {
   if (message.userIndex === -1) {
-    return { backgroundColor: "darkgray", color: "white" };
+    return { backgroundColor: 'darkgray', color: 'white' };
   }
   if (userIndex === message.userIndex) {
-    return { backgroundColor: "blue", color: "white" };
+    return { backgroundColor: 'blue', color: 'white' };
   }
-  return { backgroundColor: "white", color: "black" };
+  return { backgroundColor: 'white', color: 'black' };
 };
 
 const ChatMessages: React.FunctionComponent<Props> = ({
@@ -34,24 +35,7 @@ const ChatMessages: React.FunctionComponent<Props> = ({
       <h2>{title}</h2>
       <div>
         {sortedMessages.map(message => {
-          return (
-            <div
-              style={{
-                ...getMessageStyle(message, userIndex),
-                display: "flex",
-                flexDirection: "column",
-                width: "200px",
-                alignItems: "flex-end",
-                padding: "10px",
-                borderRadius: "10px",
-                backgroundColor: "#09f",
-                margin: "10px"
-              }}
-              key={message.id}
-            >
-              {message.text}
-            </div>
-          );
+          return <ChatMessage key={message.id} text={message.text} />;
         })}
       </div>
     </div>
