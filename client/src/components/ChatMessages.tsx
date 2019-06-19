@@ -1,25 +1,27 @@
 import React, { CSSProperties } from "react";
 import { Conversation, Message } from "../types";
 import ChatMessage from "./ChatMessage";
+import { MemberExpression } from "@babel/types";
 
 interface Props {
   conversation: Conversation;
   userIndex: number;
+  message: Message;
   uuid: string;
 }
 
-// const getMessageStyle = (
-//   message: Message,
-//   userIndex: number
-// ): CSSProperties => {
-//   if (message.userIndex === -1) {
-//     return { backgroundColor: "darkgray", color: "white" };
-//   }
-//   if (userIndex === message.userIndex) {
-//     return { backgroundColor: "blue", color: "white" };
-//   }
-//   return { backgroundColor: "white", color: "black" };
-// };
+const getMessageStyle = (
+  userIndex: number,
+  message: Message
+): CSSProperties => {
+  if (userIndex === 1) {
+    return { backgroundColor: "#ededed", color: "black" };
+  }
+  if (userIndex === message.userIndex) {
+    return { backgroundColor: "#09f", color: "white" };
+  }
+  return { backgroundColor: "white", color: "black" };
+};
 
 const ChatMessages: React.FunctionComponent<Props> = ({
   conversation,

@@ -1,19 +1,9 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 
 interface Props {
   text: string;
   userIndex: number;
 }
-
-const getMessageStyle = (userIndex: number) => {
-  if (userIndex === 0) {
-    return { backgroundColor: "#ededed", color: "black" };
-  }
-  if (userIndex === 1) {
-    return { backgroundColor: "#09f", color: "white" };
-  }
-  return { backgroundColor: "white", color: "black" };
-};
 
 // const messageStyle = {
 //   display: "flex",
@@ -26,23 +16,11 @@ const getMessageStyle = (userIndex: number) => {
 //   margin: "10px"
 // };
 
-// style={{
-//         ...getMessageStyle(userIndex),
-//         display: "flex",
-//         flexDirection: "column" as "column",
-//         width: "200px",
-//         alignItems: "flex-end",
-//         padding: "10px",
-//         borderRadius: "10px",
-//         margin: "10px"
-//       }}
-
 const ChatMessage: React.FunctionComponent<Props> = ({ text, userIndex }) => {
   return (
     <div>
       <div
         style={{
-          ...getMessageStyle(userIndex),
           display: "flex",
           flexDirection: "column" as "column",
           width: "200px",
